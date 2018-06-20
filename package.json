@@ -1,0 +1,16 @@
+{
+  "name": "keep-eyes-on-ticket",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=development node index.js",
+    "addTmpl": "node lib/template.js create",
+    "updTmpl": "node lib/template.js update"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.254.1",
+    "dotenv": "^6.0.0",
+    "puppeteer": "^1.5.0"
+  }
+}
