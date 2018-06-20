@@ -12,21 +12,16 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 ## Usage
 
 1. Verify at least new domain and email address in AWS SES.
-
-* Add new role with `SES` and `CloudWatch` full access.
-
-* Setup environment variables.
+2. Add new role with `SES` and `CloudWatch` full access.
+3. Setup environment variables.
 
     ```
     cp .env.example .env
     ```
-
-* Test on local.
+4. Test on local.
 
     ```
     npm start
     ```
-
-* Wrap all to zip file and upload to S3.
-
-* Create lambda function and test it.
+5. Wrap all to zip file and upload to S3.
+6. Create lambda function and test it.
