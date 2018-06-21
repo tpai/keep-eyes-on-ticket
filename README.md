@@ -18,10 +18,15 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
     ```
     cp .env.example .env
     ```
-4. Test on local.
+4. Install dependencies(with chromium) and test on local.
 
     ```
+    npm install
     npm start
     ```
-5. Wrap all to zip file and upload to S3.
+5. Wrap all to zip file(without chromium) and upload to S3.
+
+    ```
+    npm run build
+    ```
 6. Create lambda function and test it.
