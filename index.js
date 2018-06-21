@@ -23,7 +23,7 @@ const handler = (event, context, callback) => {
       return document.querySelector(selector).textContent.match(/\d{2}\/\d{2}\/\d{4}/g);
     }, '#showMainInfo > div:nth-child(2) > div:first-of-type > i');
 
-    await sendMail({
+    const response = await sendMail({
       from: process.env.EMAIL_ADDRESS,
       to: [process.env.EMAIL_ADDRESS],
       cc: [],
@@ -35,8 +35,13 @@ const handler = (event, context, callback) => {
       }),
     });
 
-    await browser.close();
-    callback(null);
+    if (process.env.NODE_ENV === 'development') {
+      await browser.close();
+    } else {
+      await page.close();
+    }
+
+    callback(response);
   })();
 };
 
