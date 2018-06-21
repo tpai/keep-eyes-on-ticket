@@ -11,22 +11,44 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 
 ## Usage
 
-1. Verify at least new domain and email address in AWS SES.
-2. Add new role with `SES` and `CloudWatch` full access.
-3. Setup environment variables.
+* Prepare one headless chrome instance with [docker](https://hub.docker.com/r/alpeware/chrome-headless-trunk/).
 
     ```
-    cp .env.example .env
+    VOLUME /tmp/chromedata/:/data
+    PORT 9222
     ```
-4. Install dependencies(with chromium) and test on local.
+
+* Visit the url with debugger port `http://[ip-address]:9222/json`.
+
+    ```
+    {
+      "description": "",
+      "devtoolsFrontendUrl": "/devtools/inspector.html?ws=[ip-address]:8111/devtools/page/xxx",
+      "id": "xxx",
+      "title": "about:blank",
+      "type": "page",
+      "url": "about:blank",
+      "webSocketDebuggerUrl": "ws://[ip-address]:9222/devtools/page/xxx" // browser ws endpoint
+    }
+    ```
+
+* Verify at least one domain and email address in AWS SES.
+* Add new role with `SES` and `CloudWatch` full access in AWS IAM.
+* Install dependencies.
 
     ```
     npm install
-    npm start
     ```
-5. Wrap all to zip file(without chromium) and upload to S3.
+* Build package and upload to S3.
 
     ```
     npm run build
     ```
-6. Create lambda function and test it.
+* Create lambda function with the following environment variables.
+
+    ```
+    BROWSER_WS_ENDPOINT=ws://[ip-address]:9222/devtools/page/xxx
+    EMAIL_ADDRESS=me@me.com
+    YOUR_NAME=me
+    NODE_ENV=production
+    ```
