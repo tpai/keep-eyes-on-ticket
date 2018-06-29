@@ -3,44 +3,60 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const puppeteer = require('puppeteer');
-const sendMail = require('./lib/sendMail');
+const checkAlive = require('./lib/checkAlive');
+const {
+  activateHeadlessChrome,
+  deactivateHeadlessChrome,
+  fetchBrowserWSEndpoint,
+} = require('./src/headlessChrome');
+const {
+  gotoWebsite,
+  crawlInfo,
+  sendMail,
+} = require('./src/main');
 
 const handler = async (event) => {
   let browser;
   if (process.env.NODE_ENV === 'development') {
+    console.log('Launch chrome');
     browser = await puppeteer.launch();
   } else {
+    console.log('Activate headless chrome');
+    await activateHeadlessChrome();
+
+    console.log('Ping headless chrome');
+    await checkAlive(process.env.REMOTE_CHROME_URL);
+
+    console.log('Fetch browser websocket endpoint');
+    const browserWSEndpoint = await fetchBrowserWSEndpoint();
+    console.log(browserWSEndpoint);
+
+    console.log('Connect chrome');
     browser = await puppeteer.connect({
-      browserWSEndpoint: process.env.BROWSER_WS_ENDPOINT,
+      browserWSEndpoint,
     });
   }
+  console.log('Create new page');
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
 
-  await page.goto('https://cenacolovinciano.vivaticket.it/');
-  const dates = await page.evaluate(selector => {
-    const element = document.querySelector(selector);
-    if (!element) return null;
-    return document.querySelector(selector).textContent.match(/\d{2}\/\d{2}\/\d{4}/g);
-  }, '#showMainInfo > div:nth-child(2) > div:first-of-type > i');
+  console.log('Go to website');
+  await gotoWebsite(page);
 
-  const response = await sendMail({
-    from: process.env.EMAIL_ADDRESS,
-    to: [process.env.EMAIL_ADDRESS],
-    cc: [],
-    replyTo: [process.env.EMAIL_ADDRESS],
-    template: 'daily_log',
-    dataJson: JSON.stringify({
-      name: process.env.YOUR_NAME,
-      date: `from ${dates[0]} to ${dates[1]}`,
-    }),
-  });
+  console.log('Crawl info');
+  const info = await crawlInfo(page);
 
-  if (process.env.NODE_ENV === 'development') {
-    return await browser.close();
-  } else {
-    return await page.close();
+  console.log('Send mail');
+  await sendMail(info);
+
+  console.log('Close browser');
+  await browser.close();
+
+  if (process.env.NODE_ENV !== 'development') {
+    console.log('Deactivate headless chrome');
+    await deactivateHeadlessChrome();
   }
+  return;
 };
 
 if (process.env.NODE_ENV === 'development') {

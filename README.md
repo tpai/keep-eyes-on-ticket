@@ -11,44 +11,43 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 
 ## Usage
 
-* Prepare one headless chrome instance with [docker](https://hub.docker.com/r/alpeware/chrome-headless-trunk/).
+1. Prepare one headless chrome instance with [docker](https://hub.docker.com/r/alpeware/chrome-headless-trunk/).
 
     ```
     VOLUME /tmp/chromedata/:/data
     PORT 9222
     ```
-
-* Visit the url with debugger port `http://[ip-address]:9222/json`.
+1. Verify at least one domain and email address in AWS SES.
+1. Add new role with `SES` and `CloudWatch` full access in AWS IAM.
 
     ```
-    {
-      "description": "",
-      "devtoolsFrontendUrl": "/devtools/inspector.html?ws=[ip-address]:8111/devtools/page/xxx",
-      "id": "xxx",
-      "title": "about:blank",
-      "type": "page",
-      "url": "about:blank",
-      "webSocketDebuggerUrl": "ws://[ip-address]:9222/devtools/page/xxx" // browser ws endpoint
-    }
-    ```
+    REMOTE_CHROME_URL=http://[ip-address]:9222/json # headless chrome debugger url
+    EMAIL_ADDRESS= # receiver email address
+    YOUR_NAME= # receiver name
 
-* Verify at least one domain and email address in AWS SES.
-* Add new role with `SES` and `CloudWatch` full access in AWS IAM.
-* Install dependencies.
+    # rancher api info (remove it if you don't use rancher)
+    RANCHER_API_URL=
+    API_ACCESS_KEY=
+    API_SECRET_KEY=
+
+    ```
+1. Install dependencies(with chromium) and test on local.
 
     ```
     npm install
+    npm start
     ```
-* Build package and upload to S3.
+1. Build package and upload to S3.
 
     ```
     npm run build
     ```
-* Create lambda function with the following environment variables.
+1. Create lambda function and test it.
 
-    ```
-    BROWSER_WS_ENDPOINT=ws://[ip-address]:9222/devtools/page/xxx
-    EMAIL_ADDRESS=me@me.com
-    YOUR_NAME=me
-    NODE_ENV=production
-    ```
+## Q&A
+
+Why activate headless chrome manually?
+
+```
+I launch chrome at remote rancher server and got hacked, because the endpoint is public all the time, so I rewrite the script that only activate chrome service when lambda need it by API call.
+```
