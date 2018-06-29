@@ -1,6 +1,6 @@
 # Keep Eyes On Ticket
 
-This lambda function is build for watching the booking date of CENACOLO VINCIANO, it will crawl the page by headless chrome and send notification email.
+This lambda function is build for watching the booking date of CENACOLO VINCIANO, it will crawl the page with headless chrome and send notification email.
 
 ### Tools
 
@@ -46,8 +46,6 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 
 ## Q&A
 
-Why activate headless chrome manually?
+**Why activate headless chrome manually?**
 
-```
 I launch chrome at remote rancher server and got hacked, because the endpoint is public all the time, so I rewrite the script that only activate chrome service when lambda need it by API call.
-```
