@@ -8,6 +8,7 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 * AWS SES
 * Headless Chrome
 * Puppeteer
+* Rancher
 
 ## Usage
 
@@ -19,18 +20,6 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
     ```
 1. Verify at least one domain and email address in AWS SES.
 1. Add new role with `SES` and `CloudWatch` full access in AWS IAM.
-
-    ```
-    REMOTE_CHROME_URL=http://[ip-address]:9222/json # headless chrome debugger url
-    EMAIL_ADDRESS= # receiver email address
-    YOUR_NAME= # receiver name
-
-    # rancher api info (remove it if you don't use rancher)
-    RANCHER_API_URL=
-    API_ACCESS_KEY=
-    API_SECRET_KEY=
-
-    ```
 1. Install dependencies(with chromium) and test on local.
 
     ```
@@ -42,10 +31,27 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
     ```
     npm run build
     ```
-1. Create lambda function and test it.
+1. Create lambda function with environment variables.
+
+    ```sh
+    # Headless Chrome Debugger URL
+    REMOTE_CHROME_URL=http://[ip-address]:9222/json
+    # Receiver Email Address
+    EMAIL_ADDRESS=
+    # Receiver Name
+    YOUR_NAME=
+
+    RANCHER_API_URL=
+    API_ACCESS_KEY=
+    API_SECRET_KEY=
+    ```
 
 ## Q&A
 
 **Why activate headless chrome manually?**
 
 I launch chrome at remote rancher server and got hacked, because the endpoint is public all the time, so I rewrite the script that only activate chrome service when lambda need it by API call.
+
+**Can I use other container management platform but Rancher?**
+
+Yes you can!
