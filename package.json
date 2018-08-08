@@ -8,8 +8,8 @@
     "dev": "better-npm-run dev",
     "build": "better-npm-run build",
     "clean": "rm -rf node_modules/ && npm install",
-    "addTmpl": "node lib/template.js create",
-    "updTmpl": "node lib/template.js update"
+    "create": "better-npm-run create",
+    "update": "better-npm-run update"
   },
   "betterScripts": {
     "dev": {
@@ -24,6 +24,12 @@
         "NODE_ENV": "production",
         "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
       }
+    },
+    "create": {
+      "command": "node lib/template.js create"
+    },
+    "update": {
+      "command": "node lib/template.js update"
     }
   },
   "dependencies": {

@@ -20,18 +20,22 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
     ```
 1. Verify at least one domain and email address in AWS SES.
 1. Add new role with `SES` and `CloudWatch` full access in AWS IAM.
-1. Install dependencies(with chromium) and test on local.
+1. Install dependencies(with chromium).
 
     ```
     npm install
-    npm start
     ```
-1. Build package and upload to S3.
+1. Create / Update email template.
+
+    ```
+    npm run (create|update) path/to/template/file
+    ```
+1. Build package.
 
     ```
     npm run build
     ```
-1. Create lambda function with environment variables.
+1. Create lambda function with archived package and environment variables.
 
     ```sh
     # Headless Chrome Debugger URL
