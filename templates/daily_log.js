@@ -5,10 +5,10 @@ module.exports = {
 
     TextPart: `Hello {{name}},
 
-The booking date of CENACOLO VINCIANO is {{date}}.`,
+{{data}}.`,
 
     HtmlPart: `<p>Hello {{name}},</p>
 
-<p>The booking date of CENACOLO VINCIANO is {{date}}.</p>`
+<pre>{{data}}</pre>`
   }
 };

@@ -9,11 +9,7 @@ const {
   deactivateHeadlessChrome,
   fetchBrowserWSEndpoint,
 } = require('./src/headlessChrome');
-const {
-  gotoWebsite,
-  crawlInfo,
-  sendMail,
-} = require('./src/main');
+const { init: mainInit } = require('./src/main');
 
 const handler = async (event) => {
   let browser;
@@ -40,14 +36,8 @@ const handler = async (event) => {
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
 
-  console.log('Go to website');
-  await gotoWebsite(page);
-
-  console.log('Crawl info');
-  const info = await crawlInfo(page);
-
-  console.log('Send mail');
-  await sendMail(info);
+  // entry point of main function
+  await mainInit(page);
 
   console.log('Close browser');
   await browser.close();

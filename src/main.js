@@ -1,6 +1,16 @@
 const sendMail = require('../lib/sendMail');
 
-module.exports = {
+const main = {
+  init: async (page) => {
+    console.log('Go to website');
+    await main.gotoWebsite(page);
+
+    console.log('Crawl info');
+    const it = await main.crawlInfo(page);
+
+    console.log('Send mail');
+    await main.sendMail(it);
+  },
   gotoWebsite: (page) => {
     return page.goto('https://cenacolovinciano.vivaticket.it/');
   },
@@ -8,8 +18,8 @@ module.exports = {
     return page.evaluate(selector => {
       const element = document.querySelector(selector);
       if (!element) return null;
-      return document.querySelector(selector).textContent.match(/\d{2}\/\d{2}\/\d{4}/g);
-    }, '#showMainInfo > div:nth-child(2) > div:first-of-type > i');
+      return document.querySelector(selector).textContent;
+    }, '#event_shout');
   },
   sendMail: (data) => {
     return sendMail({
@@ -20,8 +30,10 @@ module.exports = {
       template: 'daily_log',
       dataJson: JSON.stringify({
         name: process.env.YOUR_NAME,
-        date: `from ${data[0]} to ${data[1]}`,
+        data,
       }),
     });
   },
 };
+
+module.exports = main;
