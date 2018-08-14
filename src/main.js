@@ -1,16 +1,23 @@
+const fetch = require('isomorphic-fetch');
+const FormData = require('form-data');
+const { JSDOM } = require('jsdom');
+
 const sendMail = require('../lib/sendMail');
 
 const main = {
   init: async (page) => {
-    console.log('Go to website');
-    await main.gotoWebsite(page);
-
-    console.log('Crawl info');
-    const it = await main.crawlInfo(page);
+    console.log('Running task `The Last Supper`');
+    await theLastSupper.gotoWebsite(page);
+    const it = await theLastSupper.crawlInfo(page);
 
     console.log('Send mail');
-    await main.sendMail(it);
+    await theLastSupper.sendMail({
+      theLastSupperText: it,
+    });
   },
+};
+
+const theLastSupper = {
   gotoWebsite: (page) => {
     return page.goto('https://cenacolovinciano.vivaticket.it/');
   },
@@ -21,7 +28,9 @@ const main = {
       return document.querySelector(selector).textContent;
     }, '#event_shout');
   },
-  sendMail: (data) => {
+  sendMail: ({
+    theLastSupperText,
+  }) => {
     return sendMail({
       from: process.env.EMAIL_ADDRESS,
       to: [process.env.EMAIL_ADDRESS],
@@ -30,7 +39,7 @@ const main = {
       template: 'daily_log',
       dataJson: JSON.stringify({
         name: process.env.YOUR_NAME,
-        data,
+        data: theLastSupperText,
       }),
     });
   },
