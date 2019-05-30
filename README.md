@@ -1,6 +1,6 @@
 # Keep Eyes On Ticket
 
-This lambda function is build for watching the booking date of CENACOLO VINCIANO, it will crawl the page with headless chrome and send notification email.
+This lambda function is build for watching the booking date of CENACOLO VINCIANO, it will crawl the specific section of the page and send with email.
 
 ### Tools
 
@@ -12,10 +12,12 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 
 ## Usage
 
-1. Prepare one headless chrome instance with [docker](https://hub.docker.com/r/alpeware/chrome-headless-trunk/).
+1. Prepare one [headless chrome docker instance](https://hub.docker.com/r/alpeware/chrome-headless-trunk/).
 
     ```
-    VOLUME /tmp/chromedata/:/data
+    FROM alpeware/chrome-headless-trunk
+
+    VOLUME /tmp/chromedata:/data
     PORT 9222
     ```
 1. Verify at least one domain and email address in AWS SES.
@@ -35,7 +37,7 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
     ```
     npm run build
     ```
-1. Create lambda function with archived package and environment variables.
+1. Create archived package, upload to AWS lambda and setup environment variables.
 
     ```sh
     # Headless Chrome Debugger URL
@@ -52,10 +54,10 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 
 ## Q&A
 
-**Why activate headless chrome manually?**
+**Why not activate headless chrome in the beginning?**
 
-I launch chrome at remote rancher server and got hacked, because the endpoint is public all the time, so I rewrite the script that only activate chrome service when lambda need it by API call.
+I did and got hacked, because the endpoint is public all the time, someone might use it with bad intention.
 
 **Can I use other container management platform but Rancher?**
 
-Yes you can!
+Yes you can.
