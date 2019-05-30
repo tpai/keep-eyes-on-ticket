@@ -1,7 +1,7 @@
 module.exports = {
   Template: {
-    TemplateName: 'daily_log',
-    SubjectPart: 'Daily Notification',
+    TemplateName: 'cenacolo-vinciano',
+    SubjectPart: 'Cenacolo Vinciano Reminder',
 
     TextPart: `Hello {{name}},
 
