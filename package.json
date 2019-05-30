@@ -9,7 +9,8 @@
     "build": "better-npm-run build",
     "clean": "rm -rf node_modules/ && npm install",
     "create": "better-npm-run create",
-    "update": "better-npm-run update"
+    "update": "better-npm-run update",
+    "delete": "better-npm-run delete"
   },
   "betterScripts": {
     "dev": {
@@ -30,6 +31,9 @@
     },
     "update": {
       "command": "node lib/template.js update"
+    },
+    "delete": {
+      "command": "node lib/template.js delete"
     }
   },
   "dependencies": {
