@@ -23,18 +23,22 @@ const handler = async (event) => {
       browserWSEndpoint,
     });
   }
-  console.log('Create new page');
-  const page = await browser.newPage();
-  await page.setViewport({ width: 1280, height: 800 });
+  try {
+    console.log('Create new page');
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1280, height: 800 });
 
-  // entry point of main function
-  await mainInit(page);
+    // entry point of main function
+    await mainInit(page);
 
-  console.log('Close browser');
-  await browser.close();
-
-  if (process.env.NODE_ENV !== 'development') {
-    await unmountHeadlessChrome();
+    console.log('Close browser');
+    await browser.close();
+  } catch (err) {
+    console.log('Error Occurred: ', err);
+  } finally {
+    if (process.env.NODE_ENV !== 'development') {
+      await unmountHeadlessChrome();
+    }
   }
   return;
 };

@@ -48,7 +48,6 @@ const headlessChrome = {
   deactivateHeadlessChrome: () => {
     return fetch(`${RANCHER_API_URL}?action=deactivate`, fetchOptions)
       .then(res => res.json().then(json => {
-        console.log(json);
         if (json.type === 'error') {
           return Promise.reject(json.code);
         } else {
