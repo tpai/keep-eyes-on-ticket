@@ -1,6 +1,6 @@
 # Keep Eyes On Ticket
 
-This lambda function is build for watching the booking date of CENACOLO VINCIANO, it will crawl the specific section of the page and send with email.
+At first, this AWS Lambda function is build for watching the booking date of CENACOLO VINCIANO, but now I've already revised to a crawler which you could provide specific URL and selector string, it will get the content and send email via AWS SES after you trigger the function.
 
 ### Tools
 
@@ -10,7 +10,7 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 * Puppeteer
 * Rancher
 
-## Usage
+## Prerequisites
 
 1. Prepare one [headless chrome docker instance](https://hub.docker.com/r/alpeware/chrome-headless-trunk/).
 
@@ -30,27 +30,35 @@ This lambda function is build for watching the booking date of CENACOLO VINCIANO
 1. Create / Update email template.
 
     ```
-    npm run (create|update) path/to/template/file
+    npm run (create|update) templates/simple-text.js
     ```
-1. Build package.
+
+## Usage
+
+### Development
+
+1. Setup environment variables and fill it up.
+
+    ```
+    cp .env.example .env
+    ```
+
+1. In development mode, app will use local headless chrome instance instead.
+
+    ```
+    npm run start
+    ```
+
+### Production
+
+1. Build archived package.
 
     ```
     npm run build
     ```
-1. Create archived package, upload to AWS lambda and setup environment variables.
-
-    ```sh
-    # Headless Chrome Debugger URL
-    REMOTE_CHROME_URL=http://[ip-address]:9222/json
-    # Receiver Email Address
-    EMAIL_ADDRESS=
-    # Receiver Name
-    YOUR_NAME=
-
-    RANCHER_API_URL=
-    API_ACCESS_KEY=
-    API_SECRET_KEY=
-    ```
+1. Upload to AWS lambda.
+1. Setup environment variables.
+1. Click `Test` button.
 
 ## Q&A
 
@@ -60,4 +68,4 @@ I did and got hacked, because the endpoint is public all the time, someone might
 
 **Can I use other container management platform but Rancher?**
 
-Yes you can.
+Yes you can, help yourself.
