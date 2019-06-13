@@ -2,10 +2,17 @@ const fetch = require('isomorphic-fetch');
 
 const checkAlive = require('../lib/checkAlive');
 
+const {
+  API_ACCESS_KEY,
+  API_SECRET_KEY,
+  HEADLESS_CHROME_ENDPOINT,
+  RANCHER_API_URL,
+} = process.env;
+
 const fetchOptions = {
   method: 'POST',
   headers: {
-    Authorization: `Basic ${Buffer.from(`${process.env.API_ACCESS_KEY}:${process.env.API_SECRET_KEY}`).toString('base64')}`
+    Authorization: `Basic ${Buffer.from(`${API_ACCESS_KEY}:${API_SECRET_KEY}`).toString('base64')}`
   },
 };
 
@@ -15,7 +22,7 @@ const headlessChrome = {
     await headlessChrome.activateHeadlessChrome();
 
     console.log('Ping headless chrome');
-    await checkAlive(process.env.REMOTE_CHROME_URL);
+    await checkAlive(HEADLESS_CHROME_ENDPOINT);
 
     console.log('Fetch browser websocket endpoint');
     const endpoint = await headlessChrome.fetchBrowserWSEndpoint();
@@ -26,7 +33,7 @@ const headlessChrome = {
     await headlessChrome.deactivateHeadlessChrome();
   },
   activateHeadlessChrome: () => {
-    return fetch(`${process.env.RANCHER_API_URL}?action=activate`, fetchOptions)
+    return fetch(`${RANCHER_API_URL}?action=activate`, fetchOptions)
       .then(res => res.json().then(json => {
         if (json.type === 'error') {
           return Promise.reject(json.code);
@@ -39,7 +46,7 @@ const headlessChrome = {
       });
   },
   deactivateHeadlessChrome: () => {
-    return fetch(`${process.env.RANCHER_API_URL}?action=deactivate`, fetchOptions)
+    return fetch(`${RANCHER_API_URL}?action=deactivate`, fetchOptions)
       .then(res => res.json().then(json => {
         console.log(json);
         if (json.type === 'error') {
@@ -53,7 +60,7 @@ const headlessChrome = {
       });
   },
   fetchBrowserWSEndpoint: () => {
-    return fetch(process.env.REMOTE_CHROME_URL)
+    return fetch(HEADLESS_CHROME_ENDPOINT)
       .then(res => res.json().then(json => {
         return json[0].webSocketDebuggerUrl;
       }))
