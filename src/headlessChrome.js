@@ -24,9 +24,8 @@ const headlessChrome = {
     console.log('Ping headless chrome');
     await checkAlive(HEADLESS_CHROME_ENDPOINT);
 
-    console.log('Fetch browser websocket endpoint');
-    const endpoint = await headlessChrome.fetchBrowserWSEndpoint();
-    return endpoint;
+    console.log('Return browser endpoint');
+    return HEADLESS_CHROME_ENDPOINT;
   },
   unmount: async () => {
     console.log('Deactivate headless chrome');
