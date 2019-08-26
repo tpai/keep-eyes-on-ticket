@@ -1,6 +1,19 @@
 const fetch = require('isomorphic-fetch');
 
 const sendMail = require('../lib/sendMail');
+const translate = require('../lib/translate');
+
+const {
+  TARGET_URL,
+  TARGET_SELECTOR,
+  FROM,
+  TO,
+  CC,
+  BCC,
+  EMAIL_TEMPLATE,
+  EMAIL_SUBJECT,
+  GOOGLE_TRANSLATE_ENABLE,
+} = process.env;
 
 const main = {
   init: async (page) => {
@@ -8,18 +21,17 @@ const main = {
     await app.gotoWebsite(page);
     const { text, html } = await app.getContent(page);
 
+    if (GOOGLE_TRANSLATE_ENABLE) console.log('Translate text');
+    const translatedText = GOOGLE_TRANSLATE_ENABLE ? await translate(text) : text;
+    const translatedHTML = GOOGLE_TRANSLATE_ENABLE ? await translate(html) : html;
+
     console.log('Send mail');
-    await app.sendMail({ text, html });
+    await app.sendMail({
+      text: translatedText,
+      html: translatedHTML
+    });
   },
 };
-
-const {
-  TARGET_URL,
-  TARGET_SELECTOR,
-  EMAIL_ADDRESS,
-  EMAIL_TEMPLATE,
-  EMAIL_SUBJECT,
-} = process.env;
 
 const app = {
   gotoWebsite: (page) => {
