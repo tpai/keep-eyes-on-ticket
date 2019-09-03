@@ -49,10 +49,11 @@ const app = {
   },
   sendMail: ({ text, html }) => {
     return sendMail({
-      from: EMAIL_ADDRESS,
-      to: [EMAIL_ADDRESS],
-      cc: [],
-      replyTo: [EMAIL_ADDRESS],
+      from: FROM,
+      to: TO ? TO.split(',') : [],
+      cc: CC ? CC.split(',') : [],
+      bcc: BCC ? BCC.split(',') : [],
+      replyTo: [FROM],
       template: 'simple-text',
       dataJson: JSON.stringify({
         subject: EMAIL_SUBJECT,
