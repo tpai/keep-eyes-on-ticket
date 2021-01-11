@@ -21,9 +21,13 @@ const main = {
     await app.gotoWebsite(page);
     const { text, html } = await app.getContent(page);
 
+    const fixedHTML = html.replace(/href="([^.]*)"/g, (_, p1) => {
+      return `href="${TARGET_URL}${p1}"`;
+    });
+
     if (GOOGLE_TRANSLATE_ENABLE) console.log('Translate text');
     const translatedText = GOOGLE_TRANSLATE_ENABLE ? await translate(text) : text;
-    const translatedHTML = GOOGLE_TRANSLATE_ENABLE ? await translate(html) : html;
+    const translatedHTML = GOOGLE_TRANSLATE_ENABLE ? await translate(fixedHTML) : fixedHTML;
 
     console.log('Send mail');
     await app.sendMail({
