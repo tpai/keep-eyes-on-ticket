@@ -1,7 +1,7 @@
-const fetch = require('isomorphic-fetch');
+const fetch = require("isomorphic-fetch");
 
-const sendMail = require('../lib/sendMail');
-const translate = require('../lib/translate');
+const sendMail = require("../lib/sendMail");
+const translate = require("../lib/translate");
 
 const {
   TARGET_URL,
@@ -17,22 +17,28 @@ const {
 
 const main = {
   init: async (page) => {
-    console.log('Running task');
+    console.log("Running task");
     await app.gotoWebsite(page);
     const { text, html } = await app.getContent(page);
 
-    const fixedHTML = html.replace(/href="([^.]*)"/g, (_, p1) => {
-      return `href="${TARGET_URL}${p1}"`;
-    });
+    const fixedHTML = html.replace(
+      /href="([^>]*)"/g,
+      (_, g1) => `href="${TARGET_URL}${g1}"`
+    );
 
-    if (GOOGLE_TRANSLATE_ENABLE) console.log('Translate text');
-    const translatedText = GOOGLE_TRANSLATE_ENABLE ? await translate(text) : text;
-    const translatedHTML = GOOGLE_TRANSLATE_ENABLE ? await translate(fixedHTML) : fixedHTML;
+    let translatedText = text;
+    let translatedHTML = fixedHTML;
 
-    console.log('Send mail');
+    if (GOOGLE_TRANSLATE_ENABLE) {
+      console.log("Translate text");
+      translatedText = await translate(text);
+      translatedHTML = await translate(fixedHTML);
+    }
+
+    console.log("Send mail");
     await app.sendMail({
       text: translatedText,
-      html: translatedHTML
+      html: translatedHTML,
     });
   },
 };
@@ -42,7 +48,7 @@ const app = {
     return page.goto(TARGET_URL);
   },
   getContent: (page) => {
-    return page.evaluate(selector => {
+    return page.evaluate((selector) => {
       const element = document.querySelector(selector);
       if (!element) return null;
       return {
@@ -54,11 +60,11 @@ const app = {
   sendMail: ({ text, html }) => {
     return sendMail({
       from: FROM,
-      to: TO ? TO.split(',') : [],
-      cc: CC ? CC.split(',') : [],
-      bcc: BCC ? BCC.split(',') : [],
+      to: TO ? TO.split(",") : [],
+      cc: CC ? CC.split(",") : [],
+      bcc: BCC ? BCC.split(",") : [],
       replyTo: [FROM],
-      template: 'simple-text',
+      template: "simple-text",
       dataJson: JSON.stringify({
         subject: EMAIL_SUBJECT,
         text,
